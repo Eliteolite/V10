@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - NTIC Voting</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .live-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(52, 211, 153, 0.1); color: #34d399;
+            padding: 5px 12px; border-radius: 20px; font-size: 0.75rem;
+            font-weight: 700; margin-bottom: 20px; text-transform: uppercase;
+        }
+        .pulse {
+            width: 8px; height: 8px; background: #34d399; border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+        }
+        .input-group { text-align: left; margin-top: 20px; }
+        .error-msg { color: #fb7185; font-size: 0.85rem; margin-top: 8px; min-height: 1.2em; font-weight: 500; }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; margin: 0; 
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>NTIC - KANO</h1>
+        <p>Official SRC Election Portal</p>
+    </header>
+
+    <div class="card">
+        <div class="live-badge">
+            <div class="pulse"></div>
+            Election is Live
+        </div>
+        
+        <h2 style="margin-bottom: 10px;">Voter Authentication</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 30px;">
+            Please enter your Admission Number to access your ballot.
+        </p>
+
+        <div class="input-group">
+            <label for="studentId">Admission Number</label>
+            <input type="text" id="studentId" 
+                   placeholder="e.g. 5042*****" 
+                   inputmode="numeric" 
+                   pattern="[0-9]*"
+                   autocomplete="off">
+            <p id="error" class="error-msg"></p>
+        </div>
+
+        <button id="loginBtn" onclick="startVoting()">Verify & Access Ballot</button>
+    </div>
+
+    <footer>
+        <p>Your vote is 100% anonymous and secure.</p>
+        <p>© 2026 NTIC-KANO SRC Elections</p>
+    </footer>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNxFMBm7hTPdO9BTmnx0QUB9BTneG9lnBcB6VundIrC0-zDINYnukwjw6XiV4eNmfT/exec";
+
+async function startVoting() {
+    const idInput = document.getElementById("studentId");
+    const errorDiv = document.getElementById("error");
+    const btn = document.getElementById("loginBtn");
+    const id = idInput.value.trim();
+
+    errorDiv.innerText = "";
+    idInput.style.borderColor = "rgba(255, 255, 255, 0.1)";
+
+    if (!id) {
+        errorDiv.innerText = "⚠ Admission Number is required.";
+        idInput.style.borderColor = "#fb7185";
+        return;
+    }
+
+    if (isNaN(id)) {
+        errorDiv.innerText = "⚠ Please enter a valid numerical ID.";
+        idInput.style.borderColor = "#fb7185";
+        return;
+    }
+
+    btn.innerText = "Verifying ID...";
+    btn.disabled = true;
+
+    try {
+        const response = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(id)}`);
+        const result = await response.json();
+
+        if (result.valid) {
+            localStorage.setItem("currentVoter", id);
+            window.location.href = "vote.html";
+        } else {
+            errorDiv.innerText = "❌ " + (result.message || "Access Denied.");
+            idInput.style.borderColor = "#fb7185";
+            btn.disabled = false;
+            btn.innerText = "Verify & Access Ballot";
+        }
+    } catch (e) {
+        errorDiv.innerText = "⚠ Connection error. Check your network and try again.";
+        btn.disabled = false;
+        btn.innerText = "Verify & Access Ballot";
+    }
+}
+
+document.getElementById("studentId").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") startVoting();
+});
+</script>
+</body>
+</html>

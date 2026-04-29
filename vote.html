@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vote - NTIC Elections</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .progress-box { margin-bottom: 25px; text-align: left; }
+        .bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 8px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--primary); transition: width 0.4s ease; box-shadow: 0 0 10px var(--primary); }
+        .nav-btns { display: flex; gap: 15px; margin-top: 30px; }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>NTIC - KANO</h1>
+        <p>Official SRC Election Portal</p>
+    </header>
+
+    <div class="card">
+        <div class="progress-box">
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                <span id="display-pos">Position</span>
+                <span id="display-step">Step 1 of 11</span>
+            </div>
+            <div class="bar-bg"><div class="bar-fill" id="progressBar" style="width: 0%;"></div></div>
+        </div>
+
+        <div id="optionsList"></div>
+
+        <div class="nav-btns">
+            <button id="prevBtn" class="btn-secondary" onclick="move(-1)">Previous</button>
+            <button id="nextBtn" onclick="move(1)">Continue</button>
+        </div>
+    </div>
+
+    <footer>© 2026 NTIC-KANO SRC Elections</footer>
+</div>
+
+<script>
+const positions = {
+    "SRC Co-Leader": ["Kubura Mustapha", "Fatima Auwal Adam Sani", "Bilkisu Murtala"],
+    "SRC Assist. Co-Leader": ["Rihanna Ahmad Abdulwahab", "Zainab Ismail Mai-Adamu", "Cindy Fechi Ohuruzo"],
+    "Well-being Ambassador": ["Mufidah Nababa", "Ameerah Morenike Ibrahim", "Fatima Mai Hamza"],
+    "SRC Secretary": ["Bilkisu Dauda Suleiman", "Fatima Mamman Farafara", "Fatima Tsofo", "Amatullah Lawal", "Halima Abdulqadir"],
+    "Event Organizer": ["Yesmin Sadiq Bello", "Aisha Musta Ahmad", "Silakasi Nama Joshua", "Safiya Bello Maiwada"],
+    "Sports Captain": ["Favour Enewo Jimoh"],
+    "Library Assistant": ["Zainab Mustapha", "Naila Sani", "Khadija Girgir", "Aisha Aliyu Musa"],
+    "Hostel Coordinator": ["Asma'u Bala Getso", "Amina Uzairu", "Ummu Salma Kabir Lawal"],
+    "Dining Hall Coordinator": ["Candidate A", "Candidate B"],
+    "School Ameerah": ["Aisha Bilyameen Gebe", "Amatur-Rahman Abdulqadir"],
+    "School Sister": ["Candidate A", "Candidate B"]
+};
+
+const keys = Object.keys(positions);
+let step = 0;
+let selections = JSON.parse(localStorage.getItem("selections") || "{}");
+
+// Handle Jump from Confirm Page
+if (localStorage.getItem("jumpToPosition")) {
+    step = keys.indexOf(localStorage.getItem("jumpToPosition"));
+}
+
+function render() {
+    const currentKey = keys[step];
+    const isSingleEdit = localStorage.getItem("singleEditMode") === "true";
+
+    document.getElementById("display-pos").innerText = currentKey;
+    document.getElementById("display-step").innerText = `Step ${step + 1} of ${keys.length}`;
+    document.getElementById("progressBar").style.width = ((step + 1) / keys.length * 100) + "%";
+    
+    let html = "";
+    positions[currentKey].forEach(name => {
+        const checked = (selections[currentKey] === name) ? "checked" : "";
+        html += `
+        <label class="option">
+            <span style="font-size: 1.1rem; font-weight: 500;">${name}</span>
+            <input type="radio" name="c" value="${name}" ${checked} onchange="save('${currentKey}', '${name}')">
+        </label>`;
+    });
+    
+    document.getElementById("optionsList").innerHTML = html;
+    
+    // UI Logic for buttons
+    document.getElementById("prevBtn").style.display = (step === 0 || isSingleEdit) ? "none" : "block";
+    document.getElementById("nextBtn").innerText = isSingleEdit ? "Save & Return" : (step === keys.length - 1 ? "Review Ballot" : "Continue");
+}
+
+function save(key, val) {
+    selections[key] = val;
+    localStorage.setItem("selections", JSON.stringify(selections));
+}
+
+function move(dir) {
+    if (dir === 1 && !selections[keys[step]]) {
+        alert("Please select a candidate before proceeding.");
+        return;
+    }
+
+    if (localStorage.getItem("singleEditMode") === "true" && dir === 1) {
+        localStorage.removeItem("singleEditMode");
+        localStorage.removeItem("jumpToPosition");
+        window.location.href = "confirm.html";
+        return;
+    }
+
+    step += dir;
+    if (step >= keys.length) window.location.href = "confirm.html";
+    else render();
+}
+
+render();
+</script>
+</body>
+</html>
