@@ -1,52 +1,75 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 :root {
-  --primary: #38bdf8;
-  --primary-dark: #0ea5e9;
-  --bg-dark: #020617;
-  --card-bg: rgba(30, 41, 59, 0.7);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
+  --primary: #4169E1;        /* Royal Blue */
+  --primary-dark: #365BB0;
+  --bg-light: #F8FAFC;       /* Clean white like ntic.edu.ng */
+  --card-bg: #FFFFFF;
+  --text-main: #1E293B;
+  --text-muted: #64748B;
+  --border-light: #E2E8F0;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
 
 body {
   font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at top, #1e293b, #020617);
+  background: var(--bg-light);
   color: var(--text-main);
   min-height: 100vh;
 }
 
-.container { max-width: 600px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+.container { 
+  max-width: 600px; 
+  margin: 0 auto; 
+  padding: 40px 20px; 
+  text-align: center; 
+}
 
-header { margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
-header h1 { font-size: 2rem; color: var(--primary); letter-spacing: -1px; }
-header p { color: var(--text-muted); font-size: 0.9rem; }
+header { 
+  margin-bottom: 30px; 
+  border-bottom: 1px solid var(--border-light); 
+  padding-bottom: 20px; 
+}
+header h1 { 
+  font-size: 2rem; 
+  color: var(--primary); 
+  letter-spacing: -1px; 
+}
+header p { 
+  color: var(--text-muted); 
+  font-size: 0.9rem; 
+}
 
 .card {
   background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-light);
   padding: 35px;
   border-radius: 20px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Formal Input Fields */
 input[type="text"], input[type="password"] {
     width: 100%;
     padding: 16px;
-    background: rgba(15, 23, 42, 0.8);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: #F1F5F9;
+    border: 2px solid #E2E8F0;
     border-radius: 12px;
-    color: white;
+    color: var(--text-main);
     font-size: 1rem;
     outline: none;
-    transition: border-color 0.3s;
+    transition: all 0.3s;
 }
 
-input:focus { border-color: var(--primary); }
+input:focus { 
+  border-color: var(--primary); 
+  box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+}
 
 /* Option Cards for Vote Page */
 .option {
@@ -55,44 +78,148 @@ input:focus { border-color: var(--primary); }
   justify-content: space-between;
   padding: 18px;
   margin: 12px 0;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background: #F8FAFC;
+  border: 2px solid #E2E8F0;
   border-radius: 14px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.option:hover { border-color: var(--primary); background: rgba(56, 189, 248, 0.05); }
+.option:hover { 
+  border-color: var(--primary); 
+  background: rgba(65, 105, 225, 0.05);
+  transform: translateY(-1px);
+}
 
 /* Radio Buttons */
 input[type="radio"] {
     appearance: none;
     width: 22px;
     height: 22px;
-    border: 2px solid var(--text-muted);
+    border: 2px solid #CBD5E1;
     border-radius: 50%;
     cursor: pointer;
+    transition: all 0.2s;
 }
 
 input[type="radio"]:checked {
     border-color: var(--primary);
     background: var(--primary);
-    box-shadow: inset 0 0 0 4px #0f172a;
+    box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
 }
 
 button {
   width: 100%;
   background: var(--primary);
-  color: #020617;
+  color: white;
   border: none;
   padding: 18px;
   border-radius: 12px;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(65, 105, 225, 0.3);
 }
 
-button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.3); }
+button:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 20px rgba(65, 105, 225, 0.4);
+}
 
-footer { margin-top: 40px; color: var(--text-muted); font-size: 0.8rem; }
+button:disabled {
+  background: #94A3B8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+footer { 
+  margin-top: 40px; 
+  color: var(--text-muted); 
+  font-size: 0.8rem; 
+}
+
+/* Admin Dashboard Updates */
+.admin-grid { 
+  display: grid; 
+  gap: 20px; 
+  text-align: left; 
+}
+.accordion-item { 
+  background: white;
+  border-radius: 12px; 
+  margin-bottom: 10px; 
+  overflow: hidden; 
+  border: 1px solid var(--border-light);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.accordion-header { 
+  padding: 15px 20px; 
+  cursor: pointer; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  background: #F8FAFC;
+  transition: background 0.2s;
+}
+.accordion-header:hover {
+  background: rgba(65, 105, 225, 0.05);
+}
+.accordion-content { 
+  display: none; 
+  padding: 25px; 
+  background: white;
+}
+
+.winner-badge { 
+  font-size: 0.7rem; 
+  background: #FCD34D; 
+  color: #92400E; 
+  padding: 4px 10px; 
+  border-radius: 20px; 
+  font-weight: 800; 
+  margin-left: 10px; 
+}
+
+/* Progress Bar for Vote Page */
+.progress-box { 
+  margin-bottom: 25px; 
+  text-align: left; 
+}
+.bar-bg { 
+  width: 100%; 
+  height: 8px; 
+  background: #E2E8F0; 
+  border-radius: 10px; 
+  margin-top: 8px; 
+  overflow: hidden; 
+}
+.bar-fill { 
+  height: 100%; 
+  background: var(--primary); 
+  transition: width 0.4s ease; 
+  box-shadow: 0 0 10px rgba(65, 105, 225, 0.4);
+}
+
+.nav-btns { 
+  display: flex; 
+  gap: 15px; 
+  margin-top: 30px; 
+}
+.btn-secondary { 
+  background: #F1F5F9; 
+  color: var(--text-main); 
+  border: 1px solid var(--border-light);
+  flex: 1;
+}
+.btn-secondary:hover {
+  background: #E2E8F0;
+}
+
+/* Thank You Page */
+.success-icon {
+  font-size: 4rem;
+  color: #10B981;
+  margin-bottom: 30px;
+}
