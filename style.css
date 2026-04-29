@@ -563,3 +563,120 @@ footer {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+
+/* ADD THESE SPECIFIC FIXES TO YOUR EXISTING CSS */
+
+/* ===== 1. CONFIRMATION PAGE - PERFECT TEXT READABILITY ===== */
+#receiptList {
+  background: #FFFFFF !important;  /* Pure white background */
+  border: 2px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  margin-bottom: 2rem !important;
+  padding: 1.5rem !important;
+  color: var(--text-primary) !important;
+}
+
+#receiptList > div {
+  background: #FAFAFA !important;  /* Light gray cards */
+  border: 1px solid #E5E7EB !important;
+  border-radius: 12px !important;
+  padding: 1.75rem 2rem !important;
+  margin-bottom: 1rem !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  color: var(--text-primary) !important;  /* DARK TEXT */
+}
+
+#receiptList > div > div {
+  flex: 1 !important;
+  color: var(--text-primary) !important;
+}
+
+#receiptList > div > div > span {
+  font-size: 0.85rem !important;
+  color: var(--text-secondary) !important;  /* Position name */
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  display: block !important;
+  margin-bottom: 0.25rem !important;
+}
+
+#receiptList > div > div > div {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: var(--primary) !important;  /* Candidate name - BLUE */
+}
+
+#ballotToken {
+  background: rgba(30, 64, 175, 0.1) !important;
+  color: var(--primary) !important;
+  font-family: 'Roboto Mono', monospace !important;
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
+  padding: 1rem 1.5rem !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(30, 64, 175, 0.2) !important;
+}
+
+/* ===== 2. PREVIOUS BUTTON - VOTE PAGE - PROFESSIONAL STYLE ===== */
+#prevBtn {
+  background: #F8FAFC !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--border) !important;
+  flex: 1 !important;
+  padding: 1.25rem !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+#prevBtn:hover {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15) !important;
+}
+
+#prevBtn:active {
+  transform: translateY(0) !important;
+}
+
+/* ===== 3. CONTINUE BUTTON - ENHANCED ===== */
+#nextBtn {
+  background: var(--primary-gradient) !important;
+  color: white !important;
+  flex: 1 !important;
+  border: none !important;
+  padding: 1.25rem !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3) !important;
+}
+
+#nextBtn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* ===== 4. NAV BUTTONS CONTAINER ===== */
+.nav-btns {
+  display: flex !important;
+  gap: 1.5rem !important;
+  margin-top: 3rem !important;
+  align-items: stretch !important;
+}
+
+@media (max-width: 640px) {
+  .nav-btns {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+}
