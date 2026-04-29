@@ -2,50 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>2026 NTIC-KANO SRC Election Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 NTIC-KANO SRC Election Results - OFFICIAL</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .hero-banner {
-            background: linear-gradient(135deg, var(--primary-gradient), rgba(59, 130, 246, 0.3));
+            background: linear-gradient(135deg, var(--primary-gradient), rgba(59, 130, 246, 0.4));
             color: white;
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 5rem 2rem;
             border-radius: var(--radius);
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
             box-shadow: var(--shadow-blue);
+            position: relative;
+            overflow: hidden;
         }
-        .results-grid { display: grid; gap: 2rem; margin-bottom: 3rem; }
-        .winner-card {
-            border: 3px solid var(--gold);
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.05));
+        .hero-banner::before {
+            content: '🏆 OFFICIAL RESULTS';
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
         }
-        .position-card { 
-            background: var(--bg-card); 
-            border-radius: var(--radius);
-            padding: 2.5rem;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-blue);
-            transition: transform 0.3s ease;
-        }
-        .position-card:hover { transform: translateY(-5px); }
         .results-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
         }
         .stat-card {
-            background: var(--bg-card);
-            padding: 2rem;
+            background: #FFFFFF;
+            padding: 2.5rem 2rem;
             border-radius: var(--radius);
             text-align: center;
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-blue);
+            color: var(--text-primary);
         }
-        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); }
-        @media (max-width: 640px) {
-            .hero-banner { padding: 3rem 1.5rem; }
-            .results-grid { grid-template-columns: 1fr; }
+        .stat-number { 
+            font-size: 3rem; 
+            font-weight: 800; 
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .results-grid { 
+            display: grid; 
+            gap: 2.5rem; 
+            margin-bottom: 4rem; 
+        }
+        .position-card { 
+            background: #FFFFFF !important;
+            border-radius: var(--radius);
+            padding: 3rem;
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-blue);
+            color: var(--text-primary) !important;
+            transition: all 0.3s ease;
+        }
+        .position-card:hover { 
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.2);
+        }
+        .position-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--border);
+        }
+        .winner-card {
+            border-color: #F59E0B !important;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(251, 191, 36, 0.03)) !important;
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.15) !important;
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        .results-table th {
+            text-align: left;
+            padding: 1.25rem 0;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .results-table td {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #F1F5F9;
+            color: var(--text-primary) !important;
+            font-weight: 500;
+        }
+        .winner-name { 
+            color: #F59E0B !important;
+            font-weight: 800 !important;
+            font-size: 1.1rem !important;
+        }
+        .vote-count { font-weight: 700; color: var(--primary); }
+        .percentage { 
+            font-weight: 700; 
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+        @media (max-width: 768px) {
+            .results-stats { grid-template-columns: repeat(2, 1fr); }
+            .position-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .results-grid { gap: 2rem; }
         }
     </style>
 </head>
@@ -53,206 +125,213 @@
 <div class="container">
     <!-- Hero Banner -->
     <div class="hero-banner">
-        <h1 style="font-size: 3rem; margin-bottom: 1rem;">🏆 ELECTION RESULTS</h1>
-        <p style="font-size: 1.3rem; opacity: 0.95;">2026 NTIC-KANO SRC Student Representative Council</p>
-        <div class="live-badge" style="background: rgba(255,255,255,0.2); color: white; margin-top: 1.5rem;">
-            Official Results - Verified & Final
-        </div>
+        <h1 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 1rem; text-shadow: 0 4px 12px rgba(0,0,0,0.3);">ELECTION RESULTS</h1>
+        <p style="font-size: 1.4rem; margin-bottom: 0.5rem;">2026 NTIC-KANO SRC Elections</p>
+        <p style="font-size: 1.1rem; opacity: 0.9;">Official Results Certified by Election Committee</p>
     </div>
 
-    <!-- Key Statistics -->
+    <!-- Election Statistics -->
     <div class="results-stats">
         <div class="stat-card">
-            <div class="stat-number" id="totalVotes">347</div>
-            <div>Total Votes Cast</div>
+            <div class="stat-number" id="totalVotes">Loading...</div>
+            <div style="font-size: 1.1rem; font-weight: 600;">Total Votes Cast</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number" style="color: var(--success);">92%</div>
-            <div>Voter Turnout</div>
+            <div class="stat-number" style="color: var(--success);" id="turnout">0%</div>
+            <div style="font-size: 1.1rem; font-weight: 600;">Voter Turnout</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number" style="color: var(--gold);">11</div>
-            <div>Positions Filled</div>
+            <div class="stat-number" id="positionsFilled">11</div>
+            <div style="font-size: 1.1rem; font-weight: 600;">Positions Filled</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number" style="color: var(--primary);">0</div>
-            <div>Tie Breakers</div>
+            <div class="stat-number" style="color: var(--gold);" id="ties">0</div>
+            <div style="font-size: 1.1rem; font-weight: 600;">Tie Breakers</div>
         </div>
     </div>
 
-    <!-- Results Grid -->
+    <!-- Results by Position -->
     <div class="results-grid" id="resultsContainer">
-        <!-- Results will be populated by JavaScript -->
-    </div>
-
-    <!-- Share & Navigation -->
-    <div style="text-align: center; padding: 3rem 0;">
-        <button class="full-report-btn" onclick="downloadResults()">📊 Download Full Report (CSV)</button>
-        <div style="margin-top: 2rem;">
-            <a href="index.html" class="home-btn" style="margin-right: 1rem;">← Back to Voting Portal</a>
-            <button onclick="shareResults()" style="background: var(--success-gradient, linear-gradient(135deg, var(--success), #10B981));">📱 Share Results</button>
+        <div style="text-align: center; padding: 4rem; color: var(--text-muted);">
+            <div class="loading" style="margin: 0 auto 2rem;"></div>
+            Loading official results...
         </div>
     </div>
 
-    <footer>© 2026 NTIC-KANO SRC Elections • Results certified by Election Committee</footer>
+    <!-- Actions -->
+    <div style="text-align: center; padding: 4rem 0;">
+        <button class="full-report-btn" onclick="downloadResults()" id="downloadBtn" style="display: none;">
+            📊 Download Official Results (CSV)
+        </button>
+        <div style="margin-top: 2.5rem;">
+            <a href="index.html" class="home-btn" style="font-size: 1.1rem; padding: 1.25rem 3rem;">← Back to Home</a>
+        </div>
+    </div>
+
+    <footer style="font-size: 1rem; padding: 4rem 0;">
+        © 2026 NTIC-KANO SRC Elections | Results verified by Independent Election Committee
+    </footer>
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNxFMBm7hTPdO9BTmnx0QUB9BTneG9lnBcB6VundIrC0-zDINYnukwjw6XiV4eNmfT/exec";
 
-// Sample results data (replace with real data from your backend)
-const FINAL_RESULTS = {
-    "SRC Co-Leader": { "Kubura Mustapha": 142, "Fatima Auwal Adam Sani": 89, "Bilkisu Murtala": 67 },
-    "SRC Assist. Co-Leader": { "Rihanna Ahmad Abdulwahab": 156, "Zainab Ismail Mai-Adamu": 78, "Cindy Fechi Ohuruzo": 64 },
-    "Sports Captain": { "Favour Enewo Jimoh": 298 },
-    "SRC Secretary": { "Bilkisu Dauda Suleiman": 134, "Fatima Mamman Farafara": 98, "Fatima Tsofo": 45, "Amatullah Lawal": 32, "Halima Abdulqadir": 29 },
-    "Event Organizer": { "Yesmin Sadiq Bello": 145, "Aisha Musta Ahmad": 89, "Silakasi Nama Joshua": 67, "Safiya Bello Maiwada": 46 },
-    "Well-being Ambassador": { "Mufidah Nababa": 167, "Ameerah Morenike Ibrahim": 78, "Fatima Mai Hamza": 53 },
-    "Library Assistant": { "Zainab Mustapha": 154, "Naila Sani": 92, "Khadija Girgir": 56, "Aisha Aliyu Musa": 45 },
-    "Hostel Coordinator": { "Asma'u Bala Getso": 189, "Amina Uzairu": 67, "Ummu Salma Kabir Lawal": 42 },
-    "School Ameerah": { "Aisha Bilyameen Gebe": 203, "Amatur-Rahman Abdulqadir": 144 }
-};
-
-async function loadResults() {
+async function loadRealResults() {
     try {
-        // Try to fetch real results first
         const response = await fetch(`${SCRIPT_URL}?action=getResults`);
-        const data = await response.json();
+        const rows = await response.json();
         
-        // Process real data if available, otherwise use sample
-        if (data && data.length > 0) {
-            processRealResults(data);
-        } else {
-            displayResults(FINAL_RESULTS);
+        if (!rows || rows.length === 0) {
+            throw new Error('No data');
         }
-    } catch (e) {
-        // Fallback to sample data
-        displayResults(FINAL_RESULTS);
+
+        // Process EXACTLY like admin page
+        const cachedVotes = rows.map(r => ({ 
+            voter: r[1], 
+            selections: JSON.parse(r[2]) 
+        }));
+
+        document.getElementById('totalVotes').textContent = cachedVotes.length;
+        
+        // Calculate positions and stats
+        const allPositions = {};
+        cachedVotes.forEach(vote => {
+            Object.entries(vote.selections).forEach(([position, candidate]) => {
+                if (!allPositions[position]) allPositions[position] = {};
+                allPositions[position][candidate] = (allPositions[position][candidate] || 0) + 1;
+            });
+        });
+
+        // Update stats
+        const totalPositions = Object.keys(allPositions).length;
+        const ties = Object.values(allPositions).filter(pos => {
+            const counts = Object.values(pos);
+            return new Set(counts).size === 1 && counts.length > 1;
+        }).length;
+        
+        document.getElementById('positionsFilled').textContent = totalPositions;
+        document.getElementById('ties').textContent = ties;
+        document.getElementById('downloadBtn').style.display = 'inline-block';
+
+        displayResults(allPositions, cachedVotes.length);
+        
+    } catch (error) {
+        console.error('Failed to load results:', error);
+        showError('Results not available yet. Check back after election closes.');
     }
 }
 
-function processRealResults(rows) {
-    const results = {};
-    rows.forEach(row => {
-        const selections = JSON.parse(row[2]);
-        Object.entries(selections).forEach(([pos, candidate]) => {
-            results[pos] = results[pos] || {};
-            results[pos][candidate] = (results[pos][candidate] || 0) + 1;
-        });
-    });
-    displayResults(results);
-}
-
-function displayResults(results) {
+function displayResults(positions, totalVoters) {
     const container = document.getElementById('resultsContainer');
+    
     let html = '';
-
-    Object.entries(results).forEach(([position, votes]) => {
-        const sortedVotes = Object.entries(votes).sort((a, b) => b[1] - a[1]);
-        const winner = sortedVotes[0];
-        const isUnopposed = sortedVotes.length === 1;
-        const totalVotes = Object.values(votes).reduce((a, b) => a + b, 0);
+    Object.entries(positions).forEach(([position, candidates]) => {
+        const positionVotes = Object.values(candidates).reduce((a, b) => a + b, 0);
+        const sortedCandidates = Object.entries(candidates)
+            .sort(([,a], [,b]) => b - a);
+        const winner = sortedCandidates[0];
+        const isUnopposed = sortedCandidates.length === 1;
+        const hasTie = sortedCandidates.slice(0, 2).every(([,votes]) => votes === winner[1]);
 
         html += `
-        <div class="position-card ${isUnopposed ? 'winner-card' : ''}">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin: 0;">${position}</h2>
+        <div class="position-card ${isUnopposed || hasTie ? 'winner-card' : ''}">
+            <div class="position-header">
+                <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+                    ${position}
+                </h2>
                 ${isUnopposed ? 
-                    '<div class="winner-badge" style="font-size: 0.8rem;">Unopposed Winner</div>' : 
-                    `<div class="winner-badge">🏆 WINNER</div>`
+                    '<span class="winner-badge" style="font-size: 0.85rem; padding: 0.5rem 1rem;">👑 Unopposed Winner</span>' :
+                    hasTie ? 
+                    '<span class="winner-badge" style="font-size: 0.85rem; padding: 0.5rem 1rem; background: #EF4444;">⚠️  TIE</span>' :
+                    `<span class="winner-badge" style="font-size: 0.85rem; padding: 0.5rem 1rem;">🏆 WINNER</span>`
                 }
             </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 1rem; align-items: center;">
-                <div style="text-align: center;">
-                    <canvas id="chart-${position.replace(/s+/g, '')}" height="120"></canvas>
-                </div>
-                <div>
-                    ${sortedVotes.map(([candidate, count], i) => `
-                        <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--border);">
-                            <span style="font-weight: 600; color: var(--text-primary);">${candidate}</span>
-                            <span style="font-weight: 700; color: ${i === 0 ? 'var(--gold)' : 'var(--text-secondary)'}">${count} votes</span>
-                        </div>
-                    `).join('')}
-                </div>
-                <div style="text-align: center; font-size: 0.9rem; color: var(--text-muted);">
-                    <div style="font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">${Math.round((winner[1]/totalVotes)*100)}%</div>
-                    <div>Total: ${totalVotes}</div>
-                </div>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60%;">Candidate</th>
+                        <th style="width: 20%; text-align: center;">Votes</th>
+                        <th style="width: 20%; text-align: center;">%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${sortedCandidates.map(([candidate, votes]) => {
+                        const percentage = ((votes / positionVotes) * 100).toFixed(1);
+                        const isWinner = candidate === winner[0];
+                        return `
+                        <tr>
+                            <td class="${isWinner ? 'winner-name' : ''}">${candidate}</td>
+                            <td class="vote-count" style="text-align: center;">${votes}</td>
+                            <td class="percentage" style="text-align: center;">${percentage}%</td>
+                        </tr>`;
+                    }).join('')}
+                </tbody>
+            </table>
+            
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--border); color: var(--text-secondary); font-size: 0.95rem;">
+                Total Votes for this position: <strong style="color: var(--primary);">${positionVotes}</strong> 
+                | Turnout: <strong>${Math.round((positionVotes/totalVoters)*100)}%</strong> of ${totalVoters} voters
             </div>
         </div>`;
     });
 
     container.innerHTML = html;
+}
 
-    // Create charts
-    Object.keys(results).forEach(position => {
-        const canvas = document.getElementById(`chart-${position.replace(/s+/g, '')}`);
-        if (canvas) {
-            const votes = results[position];
-            const sortedVotes = Object.entries(votes).sort((a, b) => b[1] - a[1]);
-            const winnerVotes = sortedVotes[0][1];
-            
-            new Chart(canvas, {
-                type: 'doughnut',
-                data: {
-                    labels: sortedVotes.map(v => v[0]),
-                    datasets: [{
-                        data: sortedVotes.map(v => v[1]),
-                        backgroundColor: [
-                            '#F59E0B', '#3B82F6', '#10B981', '#EF4444', 
-                            '#8B5CF6', '#F97316', '#06B6D4', '#84CC16'
-                        ],
-                        borderWidth: 0,
-                        offset: sortedVotes.map(([_, votes]) => votes === winnerVotes ? 20 : 0)
-                    }]
-                },
-                options: {
-                    cutout: '70%',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
-    });
+function showError(message) {
+    document.getElementById('resultsContainer').innerHTML = `
+        <div style="text-align: center; padding: 6rem 2rem; color: var(--text-primary);">
+            <div style="font-size: 4rem; color: var(--warning); margin-bottom: 2rem;">⚠️</div>
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">Results Not Available</h2>
+            <p style="font-size: 1.2rem; max-width: 32rem; margin: 0 auto 3rem;">${message}</p>
+            <a href="index.html" class="home-btn" style="font-size: 1.1rem;">← Return to Home</a>
+        </div>
+    `;
 }
 
 function downloadResults() {
-    const csv = 'Position,Candidate,Votes,Percentage
-' +
-        Object.entries(FINAL_RESULTS).map(([pos, votes]) => {
-            const total = Object.values(votes).reduce((a,b)=>a+b,0);
-            return Object.entries(votes).map(([candidate, count]) => 
-                `${pos},"${candidate}",${count},${Math.round((count/total)*100)}%`
-            ).join('
-');
-        }).join('
-');
-    
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'NTIC_2026_Election_Results.csv';
-    a.click();
+    // Generate CSV from real data (same logic as admin)
+    fetch(`${SCRIPT_URL}?action=getResults`)
+        .then(r => r.json())
+        .then(rows => {
+            if (!rows || rows.length === 0) {
+                alert('No results data available');
+                return;
+            }
+            
+            const positions = {};
+            rows.forEach(row => {
+                const selections = JSON.parse(row[2]);
+                Object.entries(selections).forEach(([pos, candidate]) => {
+                    positions[pos] = positions[pos] || {};
+                    positions[pos][candidate] = (positions[pos][candidate] || 0) + 1;
+                });
+            });
+
+            let csv = 'Position,Candidate,Votes,Percentage
+';
+            Object.entries(positions).forEach(([pos, candidates]) => {
+                const total = Object.values(candidates).reduce((a,b)=>a+b,0);
+                Object.entries(candidates).forEach(([candidate, votes]) => {
+                    const pct = Math.round((votes/total)*100);
+                    csv += `"${pos}","${candidate}",${votes},${pct}%
+`;
+                });
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `NTIC-KANO-2026-SRC-Results-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        })
+        .catch(() => alert('Download failed - no data available'));
 }
 
-function shareResults() {
-    if (navigator.share) {
-        navigator.share({
-            title: 'NTIC-KANO 2026 SRC Election Results',
-            text: 'Check out the official election results!',
-            url: window.location.href
-        });
-    } else {
-        navigator.clipboard.writeText(window.location.href);
-        alert('Results link copied to clipboard! 📋');
-    }
-}
-
-// Load results on page load
-loadResults();
+// Load results when page loads
+window.addEventListener('load', loadRealResults);
 </script>
 </body>
 </html>
