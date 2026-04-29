@@ -7,16 +7,26 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .admin-grid { display: grid; gap: 20px; text-align: left; }
-        .accordion-item { background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .accordion-item { background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: border 0.3s; }
         .accordion-header { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .accordion-content { display: none; padding: 25px; background: rgba(0,0,0,0.3); }
         
+        /* Tie-Breaker UI Highlight */
+        .has-tie { border: 1px solid #f59e0b; background: rgba(245, 158, 11, 0.05); }
+        .tie-indicator { color: #f59e0b; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; margin-left: 10px; }
+
         .result-container { display: flex; flex-wrap: wrap; gap: 30px; align-items: center; }
         .chart-wrapper { flex: 1; min-width: 250px; max-width: 300px; }
         .stats-wrapper { flex: 1.5; min-width: 300px; }
 
         .winner-badge { font-size: 0.7rem; background: #facc15; color: #000; padding: 4px 10px; border-radius: 20px; font-weight: 800; margin-left: 10px; }
         
+        /* Turnout Progress Bar */
+        .turnout-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        .progress-meta { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
+        .progress-track { width: 100%; height: 12px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #34d399); transition: width 1s ease-in-out; }
+
         .csv-btn { background: rgba(255,255,255,0.1); color: var(--text-main); border: 1px solid rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; margin-top: 15px; }
         .full-report-btn { width: 100%; padding: 18px; margin-top: 40px; background: #34d399; color: #064e3b; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; }
         .reset-btn { width: 100%; padding: 18px; margin-top: 15px; background: #fb7185; color: white; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; opacity: 0.8; }
@@ -32,8 +42,22 @@
 <div class="container" style="max-width: 950px;">
     <header>
         <h1>Election Control Center</h1>
-        <p id="status">Syncing with Cloud Database...</p>
+        <div style="display: flex; justify-content: center; gap: 15px; align-items: center;">
+            <p id="status">Syncing with Cloud Database...</p>
+            <span id="lastUpdated" style="font-size: 0.75rem; color: var(--text-muted);"></span>
+        </div>
     </header>
+
+    <div class="turnout-card" id="turnoutContainer" style="display:none;">
+        <div class="progress-meta">
+            <span>Voter Turnout</span>
+            <span id="turnoutPercent">0%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="turnoutFill" style="width: 0%"></div>
+        </div>
+        <p id="turnoutCount" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-align: left;">0 of 0 ballots cast</p>
+    </div>
     
     <div class="admin-grid" id="mainDashboard"></div>
 
@@ -44,19 +68,36 @@
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNxFMBm7hTPdO9BTmnx0QUB9BTneG9lnBcB6VundIrC0-zDINYnukwjw6XiV4eNmfT/exec";
 const LOSER_COLORS = ['#38bdf8', '#818cf8', '#fb7185', '#34d399', '#a78bfa', '#f472b6', '#fbbf24', '#2dd4bf'];
+const ESTIMATED_TOTAL_VOTERS = 500; // Adjust this number based on your student population
 let cachedVotes = [];
 
 async function loadResults() {
     const dashboard = document.getElementById("mainDashboard");
+    const statusText = document.getElementById("status");
+    const lastUpdated = document.getElementById("lastUpdated");
+
     try {
         const response = await fetch(`${SCRIPT_URL}?action=getResults`);
         const rows = await response.json();
         cachedVotes = rows.map(r => ({ voter: r[1], selections: JSON.parse(r[2]) }));
         
-        document.getElementById("status").innerText = `Total Ballots Counted: ${cachedVotes.length}`;
+        // Real-time Indicators: Last Updated Timestamp
+        const now = new Date();
+        lastUpdated.innerText = `Last Updated: ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        
+        statusText.innerText = `Total Ballots Counted: ${cachedVotes.length}`;
         document.getElementById("downloadAllBtn").style.display = "block";
         document.getElementById("resetBtn").style.display = "block";
         dashboard.innerHTML = "";
+
+        // Participation Rate Calculation
+        if (cachedVotes.length > 0) {
+            document.getElementById("turnoutContainer").style.display = "block";
+            const percent = Math.round((cachedVotes.length / ESTIMATED_TOTAL_VOTERS) * 100);
+            document.getElementById("turnoutPercent").innerText = `${percent}%`;
+            document.getElementById("turnoutFill").style.width = `${Math.min(percent, 100)}%`;
+            document.getElementById("turnoutCount").innerText = `${cachedVotes.length} of ${ESTIMATED_TOTAL_VOTERS} ballots cast`;
+        }
 
         if (cachedVotes.length === 0) {
             dashboard.innerHTML = "<p style='padding:50px; color:var(--text-muted);'>No votes recorded yet.</p>";
@@ -75,6 +116,7 @@ async function loadResults() {
             const sortedEntries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
             const maxVotes = sortedEntries[0][1];
             const winners = sortedEntries.filter(e => e[1] === maxVotes);
+            const isTie = winners.length > 1; //
             
             const chartData = sortedEntries.map((entry, index) => ({
                 name: entry[0],
@@ -84,12 +126,15 @@ async function loadResults() {
 
             const id = pos.replace(/\s+/g, '');
             const item = document.createElement('div');
-            item.className = 'accordion-item';
+            
+            // Tie-Breaker UI: Conditional Class and Indicator
+            item.className = `accordion-item ${isTie ? 'has-tie' : ''}`;
             item.innerHTML = `
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div>
                         <strong>${pos}</strong>
-                        <span class="winner-badge">${winners.length > 1 ? '👔 Tie' : '🏆 Winner'}: ${winners.map(w => w[0]).join(' & ')}</span>
+                        ${isTie ? '<span class="tie-indicator">⚠️ Tie Detected</span>' : ''}
+                        <span class="winner-badge">${isTie ? '👔 Tie' : '🏆 Winner'}: ${winners.map(w => w[0]).join(' & ')}</span>
                     </div>
                     <span>+</span>
                 </div>
@@ -126,7 +171,7 @@ async function loadResults() {
                 options: { cutout: '65%', plugins: { legend: { display: false } } }
             });
         });
-    } catch (e) { document.getElementById("status").innerText = "❌ No data found or connection error."; }
+    } catch (e) { statusText.innerText = "❌ No data found or connection error."; }
 }
 
 async function resetElection() {
@@ -177,6 +222,8 @@ function toggleAccordion(header) {
 }
 
 loadResults();
+// Auto-refresh every 60 seconds to support the "Real-time" feel
+setInterval(loadResults, 60000);
 </script>
 </body>
 </html>
