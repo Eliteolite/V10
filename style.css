@@ -96,34 +96,3 @@ button {
 button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.3); }
 
 footer { margin-top: 40px; color: var(--text-muted); font-size: 0.8rem; }
-
-/* ===== NTIC OFFICIAL THEME OVERRIDE ===== */
-
-body {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-}
-
-header, nav, .navbar, .header {
-    background-color: #0056A3 !important;
-    color: #ffffff !important;
-}
-
-button, .btn {
-    background-color: #0056A3 !important;
-    color: #ffffff !important;
-    border: none !important;
-}
-
-button:hover, .btn:hover {
-    background-color: #003f7a !important;
-}
-
-a {
-    color: #0056A3 !important;
-}
-
-.card, .container, .box {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-}
